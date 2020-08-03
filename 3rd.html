@@ -1,0 +1,222 @@
+<!--MandeepSaini-->
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.8/d3.min.js" type="text/JavaScript"></script>
+    <script src="https://d3js.org/d3-geo-projection.v1.min.js" type="text/JavaScript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
+    <link href="mypro.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="wrapper">
+        <header>
+            <div id="header">AUTOMOBILES </div>
+        </header>
+
+        <nav>
+
+            <a href="1st.html">Map</a>
+            <a href="2nd.html">Tree</a>
+            <a href="3rd.html">Bar</a>
+
+
+        </nav>
+
+        <svg width="600" height="500" id="bar"></svg>
+        <svg width="600" height="500" id="pie"></svg>
+        <br>
+        <div id="barinfo">
+            <label>CARS :</label> <text class="name"></text><br>
+            <label>BODY STYLE :</label> <text class="bodyStyle"></text><br>
+            <label>HORSE POWER :</label> <text class="horsePower"></text><br>
+            <label>PRICE :</label> <text class="price"></text><br>
+            <svg id="img"></svg></div>
+
+
+        <script>
+            //bar graph
+            var svg = d3.select("#bar"),
+                margin = 200,
+                width = svg.attr("width") - margin,
+                height = svg.attr("height") - margin
+
+            svg.append("text")
+                .attr("transform", "translate(100,0)")
+                .attr("x", 50)
+                .attr("y", 50)
+                .attr("font-size", "24px")
+                .text("Cars and their price")
+
+            var xScale = d3.scaleBand().range([0, width]).padding(0.4),
+                yScale = d3.scaleLinear().range([height, 0]);
+
+            var g = svg.append("g")
+                .attr("transform", "translate(" + 100 + "," + 100 + ")");
+
+            d3.csv("carsData.csv", function(error, data) {
+                if (error) {
+                    throw error;
+                }
+
+                xScale.domain(data.map(function(d) {
+                    return d.make;
+                }));
+                yScale.domain([0, d3.max(data, function(d) {
+                    return 5 + d.price;
+                })]);
+                //x axis data line
+                g.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(d3.axisBottom(xScale))
+                    .append("text")
+                    .attr("y", height - 250)
+                    .attr("x", width - 100)
+                    .attr("text-anchor", "end")
+                    .attr("stroke", "black")
+                    .text("CARS");
+                //y axis data line
+                g.append("g")
+                    .call(d3.axisLeft(yScale).tickFormat(function(d) {
+                            return "$" + d;
+                        })
+                        .ticks(10))
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", "-5.1em")
+                    .attr("text-anchor", "end")
+                    .attr("stroke", "black")
+                    .text("Price");
+
+                
+                //onclick an dmouse over and out functions
+                g.selectAll(".bar")
+                    .data(data)
+                    .enter().append("rect")
+                    .attr("class", "bar")
+                    .attr("x", function(d) {
+                        return xScale(d.make);
+                    })
+                    .attr("y", function(d) {
+                        return yScale(d.price);
+                    })
+                    .attr("width", xScale.bandwidth())
+                    .attr("height", function(d) {
+                        return height - yScale(d.price)
+                    })
+                    .on("mouseenter", function(actual, i) {
+                    
+                   //appending the data and image to the file 
+                        d3.select(this).attr("opacity", 0.5)
+                        d3.select("text.name").style("background-color", "red").text(actual.make);
+                        d3.select("text.bodyStyle").style("background-color", "red").text(actual.bodyStyle);
+                        d3.select("text.horsePower").style("background-color", "red").text(actual.horsepower);
+                        d3.select("text.price").style("background-color", "red").text("$ " + actual.price);
+                        if (actual.make == "audi") {
+                            d3.select("#img").append("image").attr('xlink:href', "image/audi.JPG").attr("width", 200).attr("height", 200);
+
+                        } else if (actual.make == "bmw") {
+                            d3.select("#img").append("image").attr('xlink:href', "image/bmw.JPG").attr("width", 200).attr("height", 200);
+
+                        } else if (actual.make == "honda") {
+                            d3.select("#img").append("image").attr('xlink:href', "image/honda.JPG").attr("width", 200).attr("height", 200);
+
+                        } else if (actual.make == "jaguar") {
+                            d3.select("#img").append("image").attr('xlink:href', "image/jaguar.JPG").attr("width", 200).attr("height", 200);
+
+                        } else if (actual.make == "mercedes") {
+                            d3.select("#img").append("image").attr('xlink:href', "image/mercedezbenz.JPG").attr("width", 200).attr("height", 200);
+
+                        } else {
+                            d3.select("#img").append("image").attr('xlink:href', "image/porshe.JPG").attr("width", 200).attr("height", 200);
+
+                        }
+
+
+
+                    })
+                    .on("mouseleave", function(actual, i) {
+                        d3.select("#img").html("");
+                        d3.select(this).attr("opacity", 1)
+                        d3.select("text.name").style("background-color", "#fff").text("");
+                        d3.select("text.bodyStyle").style("background-color", "#fff").text("");
+                        d3.select("text.horsePower").style("background-color", "#fff").text("");
+                        d3.select("text.price").style("background-color", "#fff").text("");
+                    })
+                    .on("click", display);
+            });
+
+
+
+            function display(d) {
+                console.log(d);
+                
+                //array for th pie chart
+                var pieChart = d3.pie();
+                var test = [{
+                    val: +d.length,
+                    text: "length"
+                }];
+                test.push({
+                    val: +d.width,
+                    text: "width"
+                });
+                test.push({
+                    val: +d.height,
+                    text: "height"
+                });
+
+
+
+                pieChart.value(d => d.val);
+                //Create a newArc variable 
+                var newArc = d3.arc();
+                newArc.innerRadius(0)
+                    .outerRadius(100);
+
+                var myPie = pieChart(test);
+
+                var fillScale = d3.scaleOrdinal()
+                    .domain(["length", "width", "height"])
+
+                    .range(["red", "steelblue", "black"])
+//legend to display the data 
+                var legendA = d3.legendColor().scale(fillScale)
+                d3.select("#pie")
+                    .append("g")
+                    .attr("transform", "translate(500, 300)")
+                    .call(legendA)
+
+                d3.select("#pie")
+                    .append("g")
+                    .attr("transform", "translate(350,350)")
+                    .selectAll("path")
+                    .data(myPie)
+                    .enter()
+                    .append("path")
+                    .attr("d", newArc)
+                    .style("fill", (d, i) => fillScale(i))
+                    .style("stroke", "#BBDEFB")
+                    .style("stroke-width", "2px")
+
+                    .on("mouseenter", function(actual, i) {
+                        d3.select(this).attr("opacity", 0.5).append("svg:title")
+                            .text(function(d, i) {
+                                return d.data.text + " -- " + d.data.val;
+                            });
+                    }).on("mouseleave", function(actual, i) {
+                        d3.select(this).attr("opacity", 1)
+                    })
+            }
+        </script>
+
+        <footer>
+            Copyright &copy; 2019 Final Project- automobiles<br><a href="mailto:mypro@gmail.com">mypro.com</a>
+        </footer>
+    </div>
+
+
+</body></html>

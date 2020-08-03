@@ -1,0 +1,194 @@
+<!--MandeepSaini-->
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.8/d3.min.js" type="text/JavaScript"></script>
+    <script src="https://d3js.org/d3-geo-projection.v1.min.js" type="text/JavaScript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
+   <link href="mypro.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="wrapper">
+    <header>
+        <div id="header">AUTOMOBILES </div>
+    </header>
+   
+          <nav>
+           <a href="1st.html">Map</a>
+                <a href="2nd.html">Tree</a>
+              <a href="3rd.html">Bar </a>
+              
+                
+           
+        </nav>
+        
+        
+    <div id="viz">
+       
+        <svg style="width:2330px;height:900px;border:1px lightgray solid;">
+        </svg>
+       
+    <div id ="gas">
+           <button id="Gas" onclick="gasFilter()" >Gas Producing Countries</button></div>
+        <div id="diesel"> <button id="Diesel" onclick="dieselFilter()">Diesel Producing Countries</button></div>
+
+    </div>
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+        
+        
+
+    <script>
+        var diesel = [];
+        var dieselArr = [];
+        var gas = [];
+        var gasArr = [];
+        var carDet = [];
+        
+        //promise function to get the file data asynchronously
+        var PromiseWrapper = (xhr, d) => new Promise(resolve => xhr(d, (p) => resolve(p)))
+        Promise.all([
+                PromiseWrapper(d3.json, "countries.geojson"),
+                PromiseWrapper(d3.csv, "carsData.csv"),
+                PromiseWrapper(d3.csv, "production1.csv")
+            ])
+            .then(resolve => {
+                createMap(resolve[0], resolve[1], resolve[2])
+
+            })
+        var countryColor = d3.scaleQuantize().range(["red"]);
+
+        function createMap(countries, carsData, production) {
+            console.log(countries, carsData, production)//getting the data  and appending to the array 
+            production.forEach(d => {
+                if (d.fuel == "diesel") {
+                    dieselArr.push(
+                        d.countries,
+                        //car: d.cars
+                    );
+                    diesel.push({
+                        country: d.countries,
+                        car: d.cars
+                    });
+                    diesel = uniqueArray(diesel, 'car');
+                } else {
+                    gas.push({
+                        country: d.countries,
+                        car: d.cars
+                    });
+                    gasArr.push(
+                        d.countries,
+                        //car: d.cars
+                    );
+                    gas = uniqueArray(gas, 'car');
+
+
+
+                }
+            })
+            carsData.forEach(d => {
+                carDet.push({
+                    car: d.make,
+                    price: d.price,
+                    horsepower: d.horsepower,
+                    bodyStyle: d.bodyStyle
+                })
+
+
+
+            })
+            console.log(diesel, gas, carDet);
+            //representing the data on the map
+            var aProjection = d3.geoMercator().scale(200).translate([550, 550])
+            var geoPath = d3.geoPath().projection(aProjection);
+
+            var g = d3.select("svg").append("g");
+
+            g.selectAll("path.country")
+                .data(countries.features)
+                .enter()
+                .append("path")
+                .attr("d", geoPath)
+                .attr("class", "country").style("stroke", "white").append("svg:title")
+                .text(function(d) {
+                    return d.properties.ADMIN;
+                });
+
+
+
+
+
+
+
+
+
+        }
+//geeting the unique data without repeating
+
+        function uniqueArray(arr, comp) {
+
+            var unique = arr
+                .map(e => e[comp])
+
+                // store the keys of the unique objects
+                .map((e, i, final) => final.indexOf(e) === i && i)
+
+                // eliminate the dead keys & store unique objects
+                .filter(e => arr[e]).map(e => arr[e]);
+
+            return unique;
+        }
+
+//reseting the map color
+        function resetcolor() {
+            d3.select("svg").selectAll("path.country").style("fill", "black").style("stroke", "white");
+        }
+
+        //dispalying the data with gas countries
+        function gasFilter() {
+            resetcolor();
+            d3.select("svg").selectAll("path.country").filter(function(p, q) {
+                    return gasArr.indexOf(p.properties.ADMIN) > -1;
+                }).style("fill", "red").style("stroke", "white").transition().duration(0)
+                .style("fill", "green")
+                .transition().delay(1000).duration(1000)
+                .style("fill", "yellow")
+                .transition().delay(1000).duration(5000)
+                .style("fill", "red")
+                .style("fill", "green")
+                .transition().duration(1000)
+                .style("fill", "yellow")
+                .transition().delay(1000).duration(5000)
+                .style("fill", "red");
+
+        }
+//dispalying the data with diesel countries
+        function dieselFilter() {
+            resetcolor();
+            
+            d3.select("svg").selectAll("path.country").filter(function(p, q) {
+                    return dieselArr.indexOf(p.properties.ADMIN) > -1;
+                }).style("fill", "red").style("stroke", "white").transition().duration(0)
+                .style("fill", "green")
+                .transition().delay(1000).duration(1000)
+                .style("fill", "yellow")
+                .transition().delay(1000).duration(5000)
+                .style("fill", "red")
+                .style("fill", "green")
+                .transition().duration(1000)
+                .style("fill", "yellow")
+                .transition().delay(1000).duration(5000)
+                .style("fill", "red");
+
+        }
+    </script>
+         <footer>
+            Copyright &copy; 2019 Final Project- automobiles<br><a href="mailto:mypro@gmail.com">mypro.com</a>
+        </footer>
+    </div>
+    
+    
+</body></html>

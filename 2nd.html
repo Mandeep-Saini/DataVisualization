@@ -1,0 +1,194 @@
+<!--MandeepSaini-->
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.8/d3.min.js" type="text/JavaScript"></script>
+    <script src="https://d3js.org/d3-geo-projection.v1.min.js" type="text/JavaScript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.21.0/d3-legend.min.js"></script>
+   <link href="mypro.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="wrapper">
+    <header>
+        <div id="header">AUTOMOBILES </div>
+    </header>
+   
+          <nav>
+            
+              <a href="1st.html">Map</a>
+                <a href="2nd.html">Tree</a>
+              <a href="3rd.html">Bar </a>
+           
+        </nav>
+        
+        
+    <div id="viz">
+       
+        <svg stroke="black"  id="nodes" width="800" height="450"></svg>
+
+    </div>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+        
+        //Legend to represent the data 
+        var depthScale = d3.scaleOrdinal().domain(["fuel", "gas", "diesel", "bmw", "honda", "honda1", "jaguar", "mercedes-benz", "porsche"])
+            .range(["gold", "blue", "green", "yellow", "black", "grey", "red", "pink", "brown"]);
+        var legendA = d3.legendColor().scale(depthScale);
+        d3.select("#nodes")
+            .append("g")
+            .attr("transform", "translate(450, 200)")
+            .call(legendA);
+        var link;
+        var node;
+        var svg = d3.select("#nodes"),
+            width2 = +svg.attr("width"),
+            height2 = +svg.attr("height");
+        var radius = 7
+
+//Force simulation for movement of the data of the directed tree graph
+        var simulation = d3.forceSimulation()
+            .force("link", d3.forceLink().id(function(d) {
+                return d.id;
+            }))
+            .force("charge", d3.forceManyBody())
+            .force("center", d3.forceCenter(width2 / 2, height2 / 2));
+
+        d3.json("nodesEdges.json", function(error, graph) {
+            debugger;
+            link = svg.append("g")
+              .attr("transform", "translate(300, 60)")
+                .attr("class", "links")
+            
+                .selectAll("line")
+                .data(graph.links)
+                .enter().append("line")
+                .attr("id", function(d) {
+                    return d.source
+                })
+                .attr("stroke-width", function(d) {
+                    return Math.sqrt(d.value);
+                });
+
+            node = svg.append("g")
+              .attr("transform", "translate(300, 60)")
+                .attr("class", "nodes")
+                .selectAll("circle")
+                .data(graph.nodes)
+                .enter().append("circle")
+                .attr("id", function(d) {
+                    return d.id
+                })
+                .attr("r", radius)
+                .attr("fill", function(d) {
+
+                    return depthScale(d.id)
+                })
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+                .on("click", node_clicked);
+
+            node.append("title")
+                .text(function(d) {
+                    return d.id;
+                });
+
+            simulation
+                .nodes(graph.nodes)
+                .on("tick", ticked);
+
+            simulation.force("link")
+                .links(graph.links);
+
+            function ticked() {
+                node.attr("cx", function(d) {
+                        return d.x = Math.max(radius, Math.min(width2 - radius, d.x));
+                    })
+                    .attr("cy", function(d) {
+                        return d.y = Math.max(radius, Math.min(height2 - radius, d.y));
+                    });
+
+                link
+                    .attr("x1", function(d) {
+                        return d.source.x;
+                    })
+                    .attr("y1", function(d) {
+                        return d.source.y;
+                    })
+                    .attr("x2", function(d) {
+                        return d.target.x;
+                    })
+                    .attr("y2", function(d) {
+                        return d.target.y;
+                    });
+            }
+
+            node
+                .on("mousemove", function(d) {
+                    node.attr("stroke", "black")
+                })
+                .on("mouseout", function() {
+                    node.attr("stroke", "white")
+
+                })
+
+
+        });
+//drag functions for the directed graph
+        function dragstarted(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+          function hide_nodes() {
+            // Fade all the segments.
+            node.style("opacity", 0.1);
+            link.style("opacity", 0.1);
+
+            // Then highlight only those that are an ancestor of the current segment.
+            node.filter(function(d) {
+                    return (path.indexOf(d.id) >= 0);
+                })
+                .style("opacity", 1);
+            node.filter(function(d) {
+                    return (path.indexOf(d.id) >= 0);
+                })
+                .style("opacity", 1);
+            link.filter(function(d) {
+                    return (path.indexOf(d.id) >= 0);
+                })
+                .style("opacity", 1);
+            link.filter(function(d) {
+                    return (path.indexOf(d.source.id) >= 0);
+                })
+                .style("opacity", 1);
+        }
+
+
+        function node_clicked(d) {
+            clicked(d3.select('#rect_' + d.id).data()[0]);
+        }
+
+      //refernce from https://bl.ocks.org 
+    </script>
+         <footer>
+            Copyright &copy; 2019 Final Project- automobiles<br><a href="mailto:mypro@gmail.com">mypro.com</a>
+        </footer>
+    </div>
+   
+</body></html>

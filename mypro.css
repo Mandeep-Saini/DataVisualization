@@ -1,0 +1,101 @@
+
+#wrapper{
+    
+    width:auto;
+    height: auto;
+    margin-right: auto;
+    margin-left: auto;
+    box-shadow: 5px 10px;
+}
+nav{
+    text-align: center;
+   list-style: none;
+    width: 100%;
+    height: 40px;
+    display:block;
+     background-color: steelblue;
+            }
+nav a{
+            color: white;
+            text-align: center;
+    padding-right: 60px;
+            text-decoration: none;
+            font-weight: bolder;
+            font-family: courier;
+            height: 50px;
+            width: 100%;
+
+           font-weight: bold;
+           font-size:2em;
+    
+}
+
+header
+{
+             background-color: #BBDEFB;
+          
+            height: 80px;
+            width: 100%;
+        }
+        #header{
+            font-size: 60px;
+            color: #003f5c;
+              text-align: center;
+            font-weight: bolder;
+            font-family: courier;   
+        }
+      
+        .bar {
+            fill: steelblue;
+        }
+
+        .name,
+        .bodyStyle,
+        .price,
+        .horsePower {
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        label {
+            background-color: steelblue;       
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+}
+#gas{
+ margin: 10px;
+   padding-left: 500px;
+    display: inline;
+}
+#diesel{
+    margin: 10px;
+   
+    display: inline;
+   
+}
+
+#barinfo{
+    margin-left: 40%;
+}
+
+footer{
+    background-color:#BBDEFB;
+    font-size:.60em;
+    text-align: center;
+    font-style: italic;
+    padding-bottom: 10px;
+    border-top: 2px solid steelblue;
+    display:block;
+    font-size: 1em;
+}

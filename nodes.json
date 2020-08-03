@@ -1,0 +1,38 @@
+{
+	"nodes":[
+			{"id": "home", "group": 0}
+			, {"id": "card", "group": 1}
+			, {"id": "mortgage", "group": 2}
+			, {"id": "carloan", "group": 3}
+				, {"id": "card_A", "group": 1}
+					, {"id": "card_AA", "group": 1}
+					, {"id": "card_AB", "group": 1}
+						, {"id": "card_AAA", "group": 1}
+						, {"id": "card_AAB", "group": 1}
+					
+				, {"id": "card_B", "group": 1}
+				, {"id": "card_C", "group": 1}
+				, {"id": "mortgage_A", "group": 2}
+				, {"id": "mortgage_B", "group": 2}
+				, {"id": "carloan_A", "group": 3}
+		]
+	
+	
+	, "links":[
+			{"source": "card", "target": "home", "value": 3},
+			{"source": "mortgage", "target": "home", "value": 3},
+			{"source": "carloan", "target": "home", "value": 3},
+			{"source": "card_A", "target": "card", "value": 3},
+				{"source": "card_AA", "target": "card_A", "value": 3},
+					{"source": "card_AAA", "target": "card_AA", "value": 3},
+					{"source": "card_AAB", "target": "card_AA", "value": 3},
+				{"source": "card_AB", "target": "card_A", "value": 3},
+			{"source": "card_B", "target": "card", "value": 3},
+			{"source": "card_C", "target": "card", "value": 3},
+			{"source": "mortgage_A", "target": "mortgage", "value": 3},
+			{"source": "mortgage_B", "target": "mortgage", "value": 3},
+			{"source": "carloan_A", "target": "carloan", "value": 3}
+		]
+
+
+}

@@ -1,0 +1,93 @@
+{
+    "nodes": [
+            {
+                "id": "fuel",
+                "group": 0
+            },
+            {
+                "id": "gas",
+                "group": 1
+            }
+			, {
+                "id": "bmw",
+                "group": 2
+            }
+			, {
+                "id": "honda",
+                "group": 2
+            }
+			, {
+                "id": "jaguar",
+                "group": 2
+            }
+				, {
+                "id": "mercedes-benz",
+                "group": 3
+            }
+					, {
+                "id": "porsche",
+                "group": 3
+            }
+					, {
+                "id": "honda1",
+                "group": 3
+            }
+						, {
+                "id": "diesel",
+                "group": 1
+            }
+		]
+
+
+        ,
+    "links": [
+        {
+            "source": "fuel",
+            "target": "gas",
+            "value": 1
+        },
+         {
+            "source": "fuel",
+            "target": "diesel",
+            "value": 1
+        },
+        {
+            "source": "gas",
+            "target": "bmw",
+            "value": 2
+        },
+        {
+            "source": "gas",
+            "target": "bmw",
+            "value": 2
+        },
+        {
+            "source": "gas",
+            "target": "honda",
+            "value": 2
+        },
+        {
+            "source": "gas",
+            "target": "jaguar",
+            "value": 2
+        },
+        {
+            "source": "diesel",
+            "target": "mercedes-benz",
+            "value": 3
+        },
+        {
+            "source": "diesel",
+            "target": "porsche",
+            "value": 3
+        },
+        {
+            "source": "diesel",
+            "target": "honda1",
+            "value": 3
+        }
+
+		]
+
+
+}
